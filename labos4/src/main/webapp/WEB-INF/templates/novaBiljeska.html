@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"	>
+<head>
+    <th:block th:replace="components/head"></th:block>
+
+</head>
+<body class="container-fluid">
+	<div class="row text-center">
+		
+	    <div class="welcome">
+            <span sec:authorize="isAuthenticated()">Welcome <span sec:authentication="name"></span></span>
+            <form action="logout" method="POST">
+            	<button class="btn btn-danger" type="submit">Logout</button>
+
+            </form>
+        </div>	
+	
+		<div class="col-md-4 col-md-offset-4">
+		<h1>Nova Bilješka</h1>
+		<form class="form-group" method="POST" th:object="${novaBiljeskaForm}">
+		
+			<div sec:authorize="hasRole('ROLE_ADMIN')">			
+				<select th:field="*{korisnikId}" class="form-control">
+					<option value="null" >Odaberite korisnika</option>
+					<option th:each="korisnik : ${korisniciList}" th:value="${korisnik.id}"
+						th:text="${korisnik.punoIme}"></option>
+				</select>
+			</div>			
+			
+			<select th:field="*{biljeznicaId}" class="form-control">
+				<option value="null">Odaberite bilježnicu</option>
+				<option th:each="biljeznica : ${biljezniceList}" th:value="${biljeznica.id}"
+					th:text="${biljeznica.naziv}"></option>
+			</select>
+			<br/>
+			
+			<label for="title">Naslov</label>
+			<input type="text" class="form-control" th:field="*{naslov}" id="naslov" />
+			<br/>
+			
+			<textarea th:field="*{tekst}" class="form-control" id="tekst" ></textarea>
+			<br/>
+			
+			<button type="submit" class="btn button-success">Posalji</button>
+			
+		</form>
+		<a th:href="@{/novaBiljeskaResetiraj}"><button class ="btn button-danger">Resetiraj statistiku</button></a>
+		</div>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">Statistika</div>
+					<div class="panel-body">
+						<table class="table table-striped">
+							<thead>
+							<tr>
+								<th>Bilježnica</th>
+								<th>Broj bilješka</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="item:${biljeskaBrojac}">
+								<td th:text="${item.key}"></td>
+								<td th:text="${item.value}"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</body>
+</html>

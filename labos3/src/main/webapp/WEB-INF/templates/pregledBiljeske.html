@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="components/head"></th:block>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row text-center">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h1>Pregled Bilješke</h1>
+					</div>
+					<div class="panel-body">
+						<p th:text="${'Korisnik: ' +korisnickoIme}"></p>
+						<p th:text="${'Bilježnica: ' +biljeznicaIme}"></p>
+						<p th:text="${'Nalsov: '+novaBiljeskaForm.naslov}"></p>
+						<p th:text="${'Tekst: '+novaBiljeskaForm.tekst}"></p>
+					</div>
+					<div class="panel-footer">
+						<a th:href="@{/editBiljeska}"><button class="btn btn-info">Povratak</button></a>
+						<a th:href="@{/spremiBiljesku}"><button class="btn btn-success">Nastavi</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
