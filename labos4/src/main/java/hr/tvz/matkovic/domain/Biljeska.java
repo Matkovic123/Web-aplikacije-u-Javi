@@ -7,7 +7,7 @@ public class Biljeska {
 	private Korisnik korisnik;
 	private Biljeznica biljeznica;
 
-	public Biljeska(String naslov, String tekst, Korisnik korisnik, Biljeznica biljeznica) {
+	public Biljeska( Korisnik korisnik, Biljeznica biljeznica, String naslov, String tekst) {
 		super();
 		this.naslov = naslov;
 		this.tekst = tekst;

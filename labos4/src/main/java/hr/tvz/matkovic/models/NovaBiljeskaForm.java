@@ -1,22 +1,26 @@
 package hr.tvz.matkovic.models;
 
+import hr.tvz.matkovic.domain.Biljeznica;
+import hr.tvz.matkovic.domain.Korisnik;
+
 public class NovaBiljeskaForm {	
-	private String biljeznicaId;
-	private String korisnikId;
+	private Biljeznica biljeznica;
+	private Korisnik korisnik;
 	private String naslov;
 	private String tekst;
 	
-	public String getBiljeznicaId() {
-		return biljeznicaId;
+
+	public Biljeznica getBiljeznica() {
+		return biljeznica;
 	}
-	public void setBiljeznicaId(String biljeznicaId) {
-		this.biljeznicaId = biljeznicaId;
+	public void setBiljeznica(Biljeznica biljeznica) {
+		this.biljeznica = biljeznica;
 	}
-	public String getKorisnikId() {
-		return korisnikId;
+	public Korisnik getKorisnik() {
+		return korisnik;
 	}
-	public void setKorisnikId(String korisnikId) {
-		this.korisnikId = korisnikId;
+	public void setKorisnik(Korisnik korisnik) {
+		this.korisnik = korisnik;
 	}
 	public String getNaslov() {
 		return naslov;
@@ -29,9 +33,7 @@ public class NovaBiljeskaForm {
 	}
 	public void setTekst(String tekst) {
 		this.tekst = tekst;
-	}
-
-	
+	}	
 
 	
 }

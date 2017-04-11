@@ -10,7 +10,7 @@ public class KorisnikEditor extends PropertyEditorSupport {
 	public void setAsText(String text) {
 		Korisnik k = null;
 		for (Korisnik korisnik : MockHelper.mockKorisnikList()) {
-			if (korisnik.getId().equals(Long.parseLong(text))) {
+			if (korisnik.getKorisnickoIme().equals(text)) {
 				k = korisnik;
 				break;
 			}

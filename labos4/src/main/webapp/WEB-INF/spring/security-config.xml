@@ -13,9 +13,9 @@ http://www.springframework.org/schema/security/spring-security.xsd">
 		<logout logout-success-url="/login?logout=true" />
 	</http>
 	<user-service>
-		<user name="ash" password="ash" authorities="ROLE_USER" />
-		<user name="izdislav" password="izdislav" authorities="ROLE_USER" />
-		<user name="marko" password="marko" authorities="ROLE_USER" />
-		<user name="admin" password="admin" authorities="ROLE_ADMIN, ROLE_USER" />		
+		<user name="Ash" password="ash" authorities="ROLE_USER" />
+		<user name="Izdislav" password="izdislav" authorities="ROLE_USER" />
+		<user name="Marko" password="marko" authorities="ROLE_USER" />
+		<user name="Admin" password="admin" authorities="ROLE_ADMIN, ROLE_USER" />		
 	</user-service>
 </beans:beans>

@@ -1,17 +1,20 @@
 package hr.tvz.matkovic.controllers;
 
+import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import hr.tvz.matkovic.domain.Biljeska;
 import hr.tvz.matkovic.domain.Biljeznica;
 import hr.tvz.matkovic.domain.Korisnik;
+import hr.tvz.matkovic.editors.BiljeznicaEditor;
+import hr.tvz.matkovic.editors.KorisnikEditor;
 import hr.tvz.matkovic.models.MockHelper;
 import hr.tvz.matkovic.models.NovaBiljeskaForm;
 
@@ -29,6 +32,12 @@ public class NovaBiljeskaController {
 		return new HashMap<>();
 	}
 	
+	@InitBinder
+	public void dataBinding(WebDataBinder binder){		
+		binder.registerCustomEditor(Korisnik.class,new KorisnikEditor());
+		binder.registerCustomEditor(Biljeznica.class, new BiljeznicaEditor());
+	}	
+	
 	@GetMapping("/editBiljeska")
 	public String edit(@SessionAttribute NovaBiljeskaForm novaBiljeskaForm, Model model){
 		model.addAttribute("novaBiljeskaForm", novaBiljeskaForm);
@@ -42,11 +51,14 @@ public class NovaBiljeskaController {
 		model.addAttribute("biljezniceList", MockHelper.mockBiljeznicaList());
 		return "novaBiljeska";
 	}		
-	//sprema podatke za meðukorak
+	//sprema podatke za meÄ‘ukorak
 	@PostMapping("/novaBiljeska")
-	public String novaBiljeska(@ModelAttribute NovaBiljeskaForm novaBiljeskaForm, Model model) {
-		model.addAttribute("korisnickoIme",MockHelper.mockKorisnikList().stream().filter(korisnik-> korisnik.getId().equals(Long.parseLong(novaBiljeskaForm.getKorisnikId()))).findFirst().get().getPunoIme());
-		model.addAttribute("biljeznicaIme", MockHelper.mockBiljeznicaList().stream().filter(biljeznica -> biljeznica.getId().equals(Long.parseLong(novaBiljeskaForm.getBiljeznicaId()))).findFirst().get().getNaziv());		
+	public String novaBiljeska(@ModelAttribute NovaBiljeskaForm novaBiljeskaForm, Model model, Principal principal) {
+		if(novaBiljeskaForm.getKorisnik() == null){
+			novaBiljeskaForm.setKorisnik(MockHelper.mockKorisnikList().stream().filter(korisnik->korisnik.getIme().equals(principal.getName())).findFirst().get());
+		}		
+		model.addAttribute("korisnickoIme", novaBiljeskaForm.getKorisnik().getKorisnickoIme());		
+		model.addAttribute("biljeznicaIme", novaBiljeskaForm.getBiljeznica().getNaziv());
 		return "pregledBiljeske";
 	}
 	
@@ -55,33 +67,17 @@ public class NovaBiljeskaController {
 	@GetMapping("/spremiBiljesku")
 	public String spremiBiljesku(@SessionAttribute NovaBiljeskaForm novaBiljeskaForm,
 			@SessionAttribute Map<String, Integer> biljeskaBrojac, Model model) {
-
-		List<Korisnik> korisnici = MockHelper.mockKorisnikList();
-		List<Biljeznica> biljeznice = MockHelper.mockBiljeznicaList();
-		Korisnik korisnik;
-		Biljeznica biljeznica;
-		if (novaBiljeskaForm.getKorisnikId().equals("null"))
-			korisnik = null;
-		else {
-			korisnik = korisnici.stream()
-					.filter(x -> x.getId().equals(Long.parseLong(novaBiljeskaForm.getKorisnikId()))).findFirst().get();
-		}
-		if (novaBiljeskaForm.getBiljeznicaId().equals("null")) {
-			biljeznica = null;
-		} else {
-			biljeznica = biljeznice.stream()
-					.filter(bilj -> bilj.getId().equals(Long.parseLong(novaBiljeskaForm.getBiljeznicaId()))).findFirst()
-					.get();
-		}
-		Biljeska biljeska = new Biljeska(novaBiljeskaForm.getNaslov(),novaBiljeskaForm.getTekst(),korisnik,biljeznica);
+		
+		Biljeska biljeska = new Biljeska(novaBiljeskaForm.getKorisnik(),novaBiljeskaForm.getBiljeznica(),novaBiljeskaForm.getNaslov(), novaBiljeskaForm.getTekst());				
+		
 		model.addAttribute("biljeska",biljeska);
 		
-		if (biljeskaBrojac.containsKey(biljeznica.getNaziv())) {
-			int i = biljeskaBrojac.get(biljeznica.getNaziv());
+		if (biljeskaBrojac.containsKey(novaBiljeskaForm.getBiljeznica().getNaziv())) {
+			int i = biljeskaBrojac.get(novaBiljeskaForm.getBiljeznica().getNaziv());
 			i++;
-			biljeskaBrojac.put(biljeznica.getNaziv(),i);
+			biljeskaBrojac.put(novaBiljeskaForm.getBiljeznica().getNaziv(),i);
 		} else {
-			biljeskaBrojac.put(biljeznica.getNaziv(), 1);
+			biljeskaBrojac.put(novaBiljeskaForm.getBiljeznica().getNaziv(), 1);
 		}
 
 		return "unesenaBiljeska";
@@ -93,3 +89,28 @@ public class NovaBiljeskaController {
 		return "redirect:/novaBiljeska";
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
